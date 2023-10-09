@@ -10,18 +10,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.workshops.bookshelf.model.Book;
 import de.workshops.bookshelf.service.BookService;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -37,6 +42,14 @@ import java.util.List;
 @SpringBootTest
 class BookMockMvcTest {
 
+
+    @TestConfiguration
+    static class JsonPrettyPrintConfig{
+        @Bean
+        public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+            return builder -> builder.featuresToEnable(SerializationFeature.INDENT_OUTPUT);
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,6 +73,7 @@ class BookMockMvcTest {
     void shouldDeliverListWithBooksOnGetAll2() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/book")).andReturn();
         String json = mvcResult.getResponse().getContentAsString();
+        System.out.println(json);
         List<Book> books = objectMapper.readValue(json, new TypeReference<>() {});
         MatcherAssert.assertThat(books,hasSize(3));
         MatcherAssert.assertThat(books.get(0).getTitle(),equalTo("Design Patterns"));

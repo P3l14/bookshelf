@@ -1,0 +1,6 @@
+application:
+  title: '@project.name@'
+  version: entw
+springdoc:
+  api-docs:
+    enabled: true

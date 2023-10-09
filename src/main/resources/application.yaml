@@ -1,0 +1,4 @@
+bookshelf:
+  title: "my shelf"
+  version: "1337"
+  capacity: 5000

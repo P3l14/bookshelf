@@ -1,6 +1,3 @@
-application:
-  title: '@project.name@'
-  version: '@project.version@'
 springdoc:
   api-docs:
     enabled: false

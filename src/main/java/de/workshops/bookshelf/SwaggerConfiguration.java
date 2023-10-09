@@ -9,21 +9,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile(("test"))
 public class SwaggerConfiguration {
 
 
     @Bean
-    public OpenAPI api(@Value("${bookshelf.title}") String title, @Value("${bookshelf.version}") String version) {
-        return new OpenAPI()
+    public OpenAPI api(BookshelfProperties bookshelfProperties) {
+        OpenAPI openAPI = new OpenAPI()
                 .info(
                         new Info()
-                                .title(title +" API")
-                                .version("v"+ version)
+                                .title(bookshelfProperties.getTitle() + " API")
+                                .version("v" + bookshelfProperties.getVersion())
+                                .description("Gurantees a capacity of " + bookshelfProperties.getCapacity())
                                 .license(new License()
                                         .name("MIT License")
                                         .url("https://opensource.org/licenses/MIT")
                                 )
                 );
+        return openAPI;
     }
 }
